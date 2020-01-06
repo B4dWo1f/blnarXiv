@@ -17,6 +17,7 @@ class Speaker(object):
          self.com_kill = f'killall {self.com}'
          self.com_ping = 'ogg123 -q /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
       elif platform == 'darwin':  #XXX
+         voice = 'Samantha'
          self.com = 'say'
          self.com_say = f'{self.com} -v {voice}'
          self.com_kill = f'killall {self.com} &> /dev/null'
