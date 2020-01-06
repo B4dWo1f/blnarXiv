@@ -20,7 +20,7 @@ class Speaker(object):
          voice = 'Samantha'
          self.com = 'say'
          self.com_say = f'{self.com} -v {voice}'
-         self.com_kill = f'killall {self.com} &> /dev/null'
+         self.com_kill = f'killall {self.com}'  # &> /dev/null'
          self.com_ping = 'afplay /System/Library/Sounds/Ping.aiff'
    def say(self,txts,prtxt=True,T=1):
       """
@@ -90,7 +90,7 @@ class Speaker(object):
 
 def isrunning(process):
    """ Checks if a process is running """
-   resp = os.popen(f'ps -e | grep {process}').read().strip()
+   resp = os.popen(f'ps -e | grep {process} | grep -v grep').read().strip()
    if len(resp) == 0: return False
    else: return True
 
