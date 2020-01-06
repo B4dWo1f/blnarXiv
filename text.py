@@ -71,6 +71,7 @@ def paragraph(text,W=0):
    """
     Introduce breaklines when printing to avoid splitting words
    """
+   #XXX BUUUUGGG!!!! it cuts the paragraph for some reason
    if W == 0: W,Y = console.getTerminalSize()
    final_text = ''
    current_sentence = ''

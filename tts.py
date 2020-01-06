@@ -74,7 +74,8 @@ class Speaker(object):
          xml_file = tex_file.replace('.tex','.xml')
          if not os.path.isfile(xml_file):
             # convert to xml
-            com = f'latexml --dest={xml_file} {tex_file} &> /dev/null'
+            com = f'latexml --dest={xml_file} {tex_file}'
+            com += ' > /dev/null 2> /dev/null'
             os.system(com)
             if not os.path.isfile(xml_file):
                self.say(f'Sorry, I couldnt parse the tex file in {folder}')

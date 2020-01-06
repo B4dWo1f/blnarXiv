@@ -45,11 +45,18 @@ try:
 except FileNotFoundError:
    os.system('./arxiv.py')
    titles,sections = parse_arxiv(fname)
+
+try: already_read = open('already_read.txt','r').read().strip().splitlines()
+except: already_read = []
+
 for title,section in zip(titles,sections):
    S.say(title)
-   # section = sorted(section,key=lambda x:len(x.abstract))
+   section = sorted(section,key=lambda x:len(x.abstract))
    for i_entry in range(len(section)):
       entry = section[i_entry]
+      if entry.ID in already_read:
+         print(text.title('Skipping: '+entry.title))
+         continue  # skip previously read papers
       S.say(f'{i_entry+1}th entry')
       print(text.title(entry.title,s='~'))
       txt = f'Title: {entry.title}'
@@ -63,7 +70,7 @@ for title,section in zip(titles,sections):
          if resp == '1':
             download_paper(entry.ID, fol=fol)
             txt = ['Read paper now, or save for later?.',
-                   '1 for now, 2 for later']
+                   '1 for now, 2 for later\n']
             resp = S.ask4input('\n'.join(txt))
             if resp == '1':
                S.read_paper(entry.ID,folder=fol)
@@ -73,6 +80,9 @@ for title,section in zip(titles,sections):
       else:
          exit()
          say('Continuing')
+      already_read.append(entry.index)
+      with open('already_read.txt','a') as f:
+         f.write(f'{entry.ID}\n')
 
 S.say(f'Congratulations you finished checking all {len(sections[0])} papers')
 S.say('Proceed with pending reading:')
