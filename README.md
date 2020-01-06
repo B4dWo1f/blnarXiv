@@ -9,7 +9,8 @@ Initially it will browse through the "new" section of the desired areas reading 
 sudo apt-get install flite latexml
 
 ### Mac
+??
 
 ### Python
-python >= 3.6
+python >= 3.6  
 python: BeautifulSoup, lxml
