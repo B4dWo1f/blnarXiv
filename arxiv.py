@@ -111,9 +111,10 @@ def parse_arxiv(fname,URLbase='https://arxiv.org'):
       section = h3.text.split('for')[0].lstrip().rstrip() 
       if section not in ['New submissions', 'Cross-lists']: continue
       ## report section.  #TODO log this
-      h = '** ' + h3.text + ' *'
-      while len(h) < console.getTerminalSize()[0]:
-         h += '*'
+      # h = '** ' + h3.text + ' *'
+      # while len(h) < console.getTerminalSize()[0]:
+      #    h += '*'
+      h = h3.text
       titles.append(h)
       for dt_tag,dd_tag in zip(dl.find_all('dt'), dl.find_all('dd')):
          ## parsing dt tag
@@ -146,6 +147,7 @@ def parse_arxiv(fname,URLbase='https://arxiv.org'):
 def download_paper(ID,fol='.'):
    """ Download the source code of the paper """
    LG.info(f'Downloading from https://arxiv.org/e-print/{ID}')
+   #TODO download also the pdf: https://arxiv.org/pdf/{ID}.pdf
    stat = urlretrieve(f'https://arxiv.org/e-print/{ID}',f'/tmp/{ID}')
    ext = stat[1]['Content-Type'].replace('application/','')
    types = {'x-eprint-tar':'tar.gz', 'pdf':'pdf'}
@@ -168,6 +170,9 @@ def download_paper(ID,fol='.'):
 
 
 if __name__ == '__main__':
+   import tts
+   import config
+   import text
    import os
    import datetime as dt
    here = os.path.dirname(os.path.realpath(__file__))  # script folder
@@ -185,22 +190,21 @@ if __name__ == '__main__':
    logging.getLogger('').addHandler(sh)
    LG = logging.getLogger('main')
 
-   import config
+   
+   S = tts.Speaker()
+   S.say('Downloading New Submissions', 'Downloading New Submissions')
    C = config.load('config.ini')
+   print(text.section('Options for arxiv.py'))
    print(C)
-   for fol in [C.folder, C.folder_html]:
-      if not os.path.isdir(fol):
-         LG.warning(f'Creating folder {fol}')
-         os.system(f'mkdir -p {fol}')
+   print(text.spacer())
    URLbase = 'https://arxiv.org'
-   fdata = here + '/data/'
+   # fdata = here + '/data/'
    url = f'{URLbase}/list/{C.areas}/new'
    LG.info('Attempting to download '+url)
    html_doc = make_request(url) # Main web site
-   if not os.path.isdir(fdata): os. system(f'mkdir -p {fdata}')
-   fname = fdata + today.strftime('%y%m.%d') + '.arxiv'
-   
-   f = open(fname,'w')
-   f.write(html_doc)
-   f.close()
+
+   # if not os.path.isdir(fdata): os. system(f'mkdir -p {fdata}')
+   fname = f'{C.folder_html}/{today.strftime("%y%m.%d")}.arxiv'
+   with open(fname,'w') as f:
+      f.write(html_doc)
    LG.info('Saved to '+fname)

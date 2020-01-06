@@ -31,6 +31,17 @@ def justifyRL(str1,str2,w=0):
       total = str1+str2
    return total
 
+def section(string,w=0):
+   if w == 0: w,_ = console.getTerminalSize()
+   txt = f'== {string} '
+   while len(txt) < w:
+      txt += '='
+   return txt
+
+def spacer(s='=', w=0):
+   if w == 0: w,_ = console.getTerminalSize()
+   return s*w
+
 def center(string):
    """ Center text in the console width """
    X,Y = console.getTerminalSize()
@@ -40,12 +51,20 @@ def center(string):
       return ' '*padd + string
    else: return string
 
-def title(text):
+def voice(text):
+   """ Pretty print for titles """
+   w,_  = console.getTerminalSize()
+   msg = f"\x1B[3m{text}\x1B[23m"
+   while len(msg) < w+8:   #XXX +8??? wtf?!
+      msg = ' ' + msg
+   return msg
+
+def title(text,s='='):
    """ Pretty print for titles """
    X,Y = console.getTerminalSize()
-   msg = '='*X + '\n'
-   msg += '\033[1m' +center(text)+ '\033[0m'+'\n'
-   msg += '='*X
+   msg = spacer(s) + '\n'
+   msg += f'\033[1m{center(text)}\033[0m\n'
+   msg += spacer(s)
    return msg
 
 def paragraph(text,W=0):
@@ -95,19 +114,26 @@ def locate_tex_command(string,name,args=1):
    \sin{x} ---> x
    \frac{3}{7} ---> 3,7
    """
-   if args == 1: pattern = r'\\%s\{(.*?)\}'%(name)
-   elif args == 2:
-      pattern = r'\\%s\{(.*?)\}\{(.*?)\}'%(name)
-      print('ffffffffff')
-      print(string)
-      print('^^^^^^^^^^')
-   elif args == 3: pattern = r'\\%s\{(.*?)\}\{(.*?)\}\{(.*?)\}'%(name)
-   match = re.search(pattern, string)
-   return match.groups()
+   def get_rest_string(string,word):
+      return string.index(word) + len(word)
+   word = r'\%s'%(name)
+   elems = []
+   for _ in range(args):
+      wordEndIndex = get_rest_string(string,word)
+      aux = ''
+      cont = 0
+      for c in string[wordEndIndex:]:
+         if c == '{': cont += 1
+         elif c == '}': cont -= 1
+         aux += c
+         if cont == 0: break
+      elems.append(aux[1:-1])
+      word = aux
+   return tuple(elems)
+
 
 
 def clean_tex(eq):
-   print('===========================')
    eq = eq.replace('%\n','')
    eq = eq.replace('\displaystyle','')
    eq = eq.replace('\\text','')
@@ -115,6 +141,7 @@ def clean_tex(eq):
    eq = eq.replace('\\right','')
    eq = eq.replace('\\boldsymbol','')
    eq = eq.replace('\mathbf','')
+   eq = eq.replace('\\bf','')
    eq = eq.replace('\\bold','')
    eq = eq.replace('_',', sub ')
    eq = eq.replace('-',' minus ')
@@ -122,7 +149,7 @@ def clean_tex(eq):
    eq = eq.replace('*',' star ')
    eq = eq.replace('\perp',' perpendicular ')
    eq = eq.replace('\int',' integral ')
-   #XXX verwenza de mis antepasados!!!!
+   ##XXX verwenza de mis antepasados!!!!
    while '\lx@braket@' in eq:
       inner_brkt = locate_tex_command(eq, 'lx@braket@', 1)
       inner_brkt = inner_brkt[0]
@@ -130,9 +157,8 @@ def clean_tex(eq):
       new = f' braket of {inner_brkt} '
       eq = eq.replace(old, new)
    while r'\frac' in eq:
-      print('==> frac',eq)
       num,deno = locate_tex_command(eq, 'frac', 2)
-      old = fr'\frac{{{num}}}{{{deno}}}'
+      old = f'\\frac{{{num}}}{{{deno}}}'
       new = f' fraction: {num} over {deno} '
       eq = eq.replace(old, new)
    while r'\sqrt' in eq:
@@ -141,7 +167,6 @@ def clean_tex(eq):
       old = fr'\sqrt{{{sqrt}}}'
       new = f' square root of {sqrt} '
       eq = eq.replace(old, new)
-   print('***************************')
    return eq
 
 def clean_sumation(string):
