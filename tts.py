@@ -90,7 +90,8 @@ class Speaker(object):
 
 def isrunning(process):
    """ Checks if a process is running """
-   resp = os.popen(f'ps -e | grep {process} | grep -v grep').read().strip()
+   com = f'ps -e | grep {process} | grep -v grep | cut -c1-30'
+   resp = os.popen(com).read().strip()
    if len(resp) == 0: return False
    else: return True
 
