@@ -41,20 +41,24 @@ class Speaker(object):
          os.system(com)
          while isrunning(self.com):
             # What?? from https://stackoverflow.com/a/2904057/12554411
+            # check also https://stackoverflow.com/a/57191850/12554411
             inp, _, _ = select.select([sys.stdin], [], [], T)
             if inp:  # something has been typed
-               #XXX idea: f,j to go to prev,next sentence
+               #XXX idea: vim keybindings might be a good idea
                typed = sys.stdin.readline().strip()
-               if typed == 'exit': 
+               if typed == '\x1b':       # Escape (exit)
                   os.system(self.com_kill)
                   exit()
-               elif typed == 'next':
+               elif typed == '\x1b[C':   # R-arrow (next)
                   # continue to next
                   os.system(self.com_kill)
-               elif typed == 'prev':
+               elif typed == '\x1b[D':   # L-arrow (prev)
                   # continue to next
                   os.system(self.com_kill)
                   i -= 2
+               elif typed == 'f':        # f (pause)
+                  # XXX mmmmm aaaggghhhh more complicated than expected!
+                  _ = input('Pause')
          i += 1
    def ask4input(self,txt,T=1):
       """
@@ -68,6 +72,9 @@ class Speaker(object):
       os.system(self.com_kill+' 2> /dev/null')
       return resp
    def read_paper(self,ID,folder='.'):
+      """
+      Convert tex to xml to parse the papers.
+      """
       if folder[-1] == '/': folder = folder[:-1]
       fname = '/'.join([folder,ID])
       if os.path.isdir(fname):
@@ -84,7 +91,7 @@ class Speaker(object):
          print(msg)
          self.say(msg,prtxt=False)
       elif os.path.isfile(fname+'.pdf'):
-         os.system(f"evince {fname+'.pdf'}")
+         os.system(f"evince {fname+'.pdf'}")    # XXX will fail in mac
       else: print('No sepo')
 
 
@@ -94,34 +101,6 @@ def isrunning(process):
    resp = os.popen(com).read().strip()
    if len(resp) == 0: return False
    else: return True
-
-# ## say (mac only)
-# def read_text(txt,prtext='',voice='Samantha'):
-#    """
-#    Use mac's say command to read some text out loud
-#    prtext: text to print in screen, usually the same as the provided text
-#    voice: voice to use, list available: say -v ?
-#    """
-#    if len(prtext) > 0: print(prtext)
-#    com = 'say'
-#    if len(voice) > 0: com += ' -v {voice}'
-#    com += f' {txt}'
-#    com = f'{com} &'
-#    os.system(com)
-#    _ = input('ENTER to stop voice')
-#    if isrunning('say'): os.system('killall say')
-
-# def ask4input(txt,voice='Samantha'):
-#    com = 'say'
-#    if len(voice) > 0: com += ' -v {voice}'
-#    com += f' {txt}'
-#    com += ' && afplay /System/Library/Sounds/Ping.aiff'
-#    com = f'({com}) &'
-#    os.system(com)
-#    return input(txt)
-
-
-
 
 
 if __name__ == '__main__':

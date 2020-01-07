@@ -147,7 +147,6 @@ def parse_arxiv(fname,URLbase='https://arxiv.org'):
 def download_paper(ID,fol='.'):
    """ Download the source code of the paper """
    LG.info(f'Downloading from https://arxiv.org/e-print/{ID}')
-   #TODO download also the pdf: https://arxiv.org/pdf/{ID}.pdf
    stat = urlretrieve(f'https://arxiv.org/e-print/{ID}',f'/tmp/{ID}')
    ext = stat[1]['Content-Type'].replace('application/','')
    types = {'x-eprint-tar':'tar.gz', 'pdf':'pdf'}
@@ -166,6 +165,7 @@ def download_paper(ID,fol='.'):
       os.system(com)
    elif ext == 'pdf':
       pass
+   stat = urlretrieve(f'https://arxiv.org/pdf/{ID}.pdf',f'{fol}/{ID}/{ID}.pdf')
    LG.info(f'{ID} downloaded')
 
 
