@@ -99,6 +99,7 @@ def parse_arxiv(fname,URLbase='https://arxiv.org'):
    h3 = S.find('h3').text
    date = h3.split('for')[-1].lstrip().rstrip()
    date = dt.datetime.strptime(date,'%a, %d %b %y').date()
+   LG.info(f'arXiv date: {date.strftime("%d/%m/%Y")}')
 
    NewSub = []
    CrossList = []
@@ -111,25 +112,28 @@ def parse_arxiv(fname,URLbase='https://arxiv.org'):
       section = h3.text.split('for')[0].lstrip().rstrip() 
       if section not in ['New submissions', 'Cross-lists']: continue
       ## report section.  #TODO log this
-      # h = '** ' + h3.text + ' *'
-      # while len(h) < console.getTerminalSize()[0]:
-      #    h += '*'
       h = h3.text
       titles.append(h)
-      for dt_tag,dd_tag in zip(dl.find_all('dt'), dl.find_all('dd')):
+      dts = dl.find_all('dt')
+      dds = dl.find_all('dd')
+      LG.info(f'{len(dts)} entries')
+      for dt_tag,dd_tag in zip(dts, dds):
          ## parsing dt tag
          index = int(dt_tag.find('a').text.replace('[','').replace(']',''))
          arxivID = dt_tag.find('a',title='Abstract').text.replace('arXiv:','')
+         LG.debug(f'arXivID:{arxivID}, entry index:{index}')
          URLabs = URLbase + dt_tag.find('a',title='Abstract')['href']
          URLpdf = URLbase + dt_tag.find('a',title='Download PDF')['href']
          ## parsing dd tag
          # Title
          title = dd_tag.find('div',class_='list-title mathjax').text
          title = text.clean(title.replace('Title: ',''))
+         LG.debug(f'Title:{title}')
          # Authors
          authors = []
          for auth in dd_tag.find('div',class_='list-authors').find_all('a'):
             authors.append( Author(auth.text,URLbase+auth['href']) )
+         LG.debug(f'{len(authors)} authors')
          # Subjects
          subjects = dd_tag.find('div',class_='list-subjects').text
          subjects = subjects.replace('Subjects: ','').split(';')

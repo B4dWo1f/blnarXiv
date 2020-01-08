@@ -73,7 +73,8 @@ class Speaker(object):
       return resp
    def read_paper(self,ID,folder='.'):
       """
-      Convert tex to xml to parse the papers.
+      Convert tex to xml to parse the papers. Extracts the paragraphs, captions
+      and equations and reads the text out loud
       """
       if folder[-1] == '/': folder = folder[:-1]
       fname = '/'.join([folder,ID])

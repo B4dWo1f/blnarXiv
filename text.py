@@ -149,6 +149,8 @@ def clean_tex(eq):
    eq = eq.replace('/',' over ')
    eq = eq.replace('*',' star ')
    eq = eq.replace('\perp',' perpendicular ')
+   eq = eq.replace('\hbar',' h bar ')
+   eq = eq.replace('\sim',' approximately equal to ')
    eq = eq.replace('\int',' integral ')
    ##XXX verwenza de mis antepasados!!!!
    while '\lx@braket@' in eq:
@@ -170,7 +172,8 @@ def clean_tex(eq):
       eq = eq.replace(old, new)
    return eq
 
-def clean_sumation(string):
+def get_sumation(string):
+   """extract the sumation from a string"""
    sumation = ['', '']
    for p,inds in [(r'\\sum\^\{(.*?)\}_\{(.*?)\}',(0,1)),
                   (r'\\sum_\{(.*?)\}\^\{(.*?)\}',(1,0)),
