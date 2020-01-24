@@ -45,13 +45,13 @@ class Speaker(object):
             if inp:  # something has been typed
                #XXX idea: f,j to go to prev,next sentence
                typed = sys.stdin.readline().strip()
-               if typed == 'exit': 
+               if typed == 'q':     #'exit': 
                   os.system(self.com_kill)
                   exit()
-               elif typed == 'next':
+               elif typed == 'j':   #'next':
                   # continue to next
                   os.system(self.com_kill)
-               elif typed == 'prev':
+               elif typed == 'f':   #'prev':
                   # continue to next
                   os.system(self.com_kill)
                   i -= 2

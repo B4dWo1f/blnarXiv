@@ -1,0 +1,13 @@
+2020/01/24-19:25-arxiv-INFO-Downloading from https://arxiv.org/e-print/2001.08513
+2020/01/24-19:31-arxiv-INFO-Downloading from https://arxiv.org/e-print/2001.08513
+2020/01/24-19:42-arxiv-INFO-Downloading from https://arxiv.org/e-print/2001.08513
+2020/01/24-19:44-arxiv-INFO-Downloading from https://arxiv.org/e-print/2001.08513
+2020/01/24-19:44-arxiv-DEBUG-mkdir -p /Users/belenvalenzuela/belen/papers/2001.08513
+2020/01/24-19:44-arxiv-DEBUG-tar -C /Users/belenvalenzuela/belen/papers/2001.08513/ -xzvf /Users/belenvalenzuela/belen/papers/2001.08513.tar.gz
+2020/01/24-19:44-arxiv-DEBUG-rm /Users/belenvalenzuela/belen/papers/2001.08513.tar.gz
+2020/01/24-19:44-arxiv-INFO-2001.08513 downloaded
+2020/01/24-20:00-arxiv-INFO-Downloading from https://arxiv.org/e-print/2001.08513
+2020/01/24-20:00-arxiv-DEBUG-mkdir -p /Users/belenvalenzuela/belen/papers/2001.08513
+2020/01/24-20:00-arxiv-DEBUG-tar -C /Users/belenvalenzuela/belen/papers/2001.08513/ -xzvf /Users/belenvalenzuela/belen/papers/2001.08513.tar.gz
+2020/01/24-20:00-arxiv-DEBUG-rm /Users/belenvalenzuela/belen/papers/2001.08513.tar.gz
+2020/01/24-20:00-arxiv-INFO-2001.08513 downloaded

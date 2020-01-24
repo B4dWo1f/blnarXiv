@@ -7,6 +7,7 @@ import datetime as dt
 from bs4 import BeautifulSoup
 import os
 import console
+import ssl
 ## LOG
 import logging
 LG = logging.getLogger(__name__)
@@ -58,10 +59,12 @@ class ArXivEntry(object):
       self.abs = ' '.join(filtered)
       return self.abs
 
+
 def make_request(url):
    """ Make http request """
+   gcontext = ssl.SSLContext()
    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-   html_doc = urlopen(req)
+   html_doc = urlopen(req,context=gcontext)
    html_doc = html_doc.read().decode(html_doc.headers.get_content_charset())
    return html_doc
 
