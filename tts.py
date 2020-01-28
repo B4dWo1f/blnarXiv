@@ -13,7 +13,7 @@ class Speaker(object):
          # self.com = 'espeak'
          # self.com_say = f'{self.com} -v mb-en1'
          self.com = 'flite'
-         self.com_say = f'{self.com} --setf duration_stretch=1.25 -voice slt'
+         self.com_say = f'{self.com} --setf duration_stretch=1.2 -voice slt'
          self.com_kill = f'killall {self.com}'
          self.com_ping = 'ogg123 -q /usr/share/sounds/freedesktop/stereo/message-new-instant.oga'
       elif platform == 'darwin':  #XXX
